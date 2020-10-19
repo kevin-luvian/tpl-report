@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
         val contentFragment = ContentFragment()
         // Inflate the layout for this fragment
-        val button1 = view!!.findViewById<Button>(R.id.button1)
+        val button1 = view.findViewById<Button>(R.id.button1)
         val button2 = view.findViewById<Button>(R.id.button2)
         val button3 = view.findViewById<Button>(R.id.button3)
         button1.setOnClickListener {
