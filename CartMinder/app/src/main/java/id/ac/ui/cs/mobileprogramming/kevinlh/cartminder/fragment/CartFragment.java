@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,18 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-import java.util.Objects;
-
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.R;
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.adapter.EditCartViewAdapter;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.adapter.ItemViewAdapter;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Cart;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartViewModel;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodelfactory.CartViewModelFactory;
 
-public class CartItemsFragment extends Fragment {
+public class CartFragment extends Fragment {
     private Cart initialCart;
     private CartViewModel cartViewModel;
     private RecyclerView itemsRecyclerView;
@@ -34,7 +29,7 @@ public class CartItemsFragment extends Fragment {
     TextView cartTitle;
     TextView cartTime;
 
-    public CartItemsFragment(Cart cart) {
+    public CartFragment(Cart cart) {
         initialCart = cart;
     }
 
@@ -50,7 +45,7 @@ public class CartItemsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_cart_items, container, false);
+        View view = inflater.inflate(R.layout.fragment_cart, container, false);
         cartTitle = view.findViewById(R.id.cart_title);
         cartTime = view.findViewById(R.id.cart_time);
         cartTitle.setText(initialCart.getTitle());

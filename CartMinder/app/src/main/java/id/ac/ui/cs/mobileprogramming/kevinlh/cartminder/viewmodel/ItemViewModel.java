@@ -6,15 +6,20 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.repository.ItemRepository;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.ItemDetail;
 
 public class ItemViewModel extends AndroidViewModel {
-    private ItemRepository itemRepository;
     private Item item;
+    private ItemDetail itemDetail;
+    private int position;
 
     public ItemViewModel(@NonNull Application application) {
         super(application);
-        itemRepository = new ItemRepository(application);
+    }
+
+    public boolean isDetailExist() {
+        if (itemDetail == null) return false;
+        return true;
     }
 
     public void setItem(Item item) {
@@ -25,20 +30,19 @@ public class ItemViewModel extends AndroidViewModel {
         return item;
     }
 
-    public void setItemTitle(String itemTitle) {
-        item.setTitle(itemTitle);
+    public void setItemDetail(ItemDetail itemDetail) {
+        this.itemDetail = itemDetail;
     }
 
-    public void setItemDescription(String itemDescription) {
-        item.setDescription(itemDescription);
+    public ItemDetail getItemDetail() {
+        return itemDetail;
     }
 
-    public void setItemPrice(int itemPrice) {
-        item.setPrice(itemPrice);
+    public void setPosition(int position) {
+        this.position = position;
     }
 
-    public void update() {
-//        cartRepository.update(cart);
-        System.out.println("Trying to update...");
+    public int getPosition() {
+        return position;
     }
 }

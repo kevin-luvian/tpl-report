@@ -19,13 +19,15 @@ public class CartViewModel extends ViewModel {
     private CartRepository cartRepository;
     private ItemRepository itemRepository;
     private Cart cart;
-    private MutableLiveData<List<Item>> liveItems;
+    private final MutableLiveData<List<Item>> liveItems;
+    private List<Item> deletedItems;
 
     public CartViewModel(@NonNull Application application) {
         cartRepository = new CartRepository(application);
         itemRepository = new ItemRepository(application);
         cart = new Cart();
         liveItems = new MutableLiveData<>();
+        deletedItems = new ArrayList<>();
     }
 
     public void setCart(Cart cart) {
@@ -56,13 +58,19 @@ public class CartViewModel extends ViewModel {
 
     public void addCartItem(Item item) {
         liveItems.getValue().add(item);
-//        liveItems.setValue(items);
-        System.out.print("Live Items :");
-        System.out.println(liveItems.getValue().toString());
     }
 
     public void removeCartItem(Item item) {
         liveItems.getValue().remove(item);
+        deletedItems.add(item);
+    }
+
+    public void replaceCartItem(int position, Item item) {
+        liveItems.getValue().set(position, item);
+    }
+
+    public int getCartItemPosition(Item item) {
+        return liveItems.getValue().indexOf(item);
     }
 
     public void insert() {
@@ -73,7 +81,8 @@ public class CartViewModel extends ViewModel {
     }
 
     public void update() {
-//        cartRepository.update(cart);
-        System.out.println("Trying to update...");
+        cartRepository.update(cart);
+        itemRepository.insertAll(liveItems.getValue(), cart.getId());
+        itemRepository.deleteAll(deletedItems);
     }
 }

@@ -12,4 +12,12 @@
     <string name="hint_description">Description</string>
     <string name="hint_price">Price</string>
     <string name="price_value">Rp. 50.000</string>
+    <string name="button_view_details">View Details</string>
+    <string name="hint_category">Category</string>
+    <string name="hint_weight">Weight</string>
+    <string name="hint_details">Item Details</string>
+    <string name="hint_path">File Path</string>
+    <string name="button_add_details">Add Details</string>
+    <string name="button_edit_details">Edit Details</string>
+    <string name="hint_image_path">Image Path</string>
 </resources>

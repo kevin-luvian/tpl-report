@@ -33,19 +33,9 @@ public class ItemRepository {
 
     public List<Item> getCartItems(Cart cart) {
         try {
-            GetCartItemsAsyncTask task = new GetCartItemsAsyncTask(this);
+            GetCartItemsAsyncTask task = new GetCartItemsAsyncTask();
+            task.setWeakReference(new WeakReference<ItemRepository>(this));
             return task.execute(cart).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("[error]" + e.getMessage());
-            return null;
-        }
-    }
-
-    public List<Item> getItems() {
-        try {
-            GetItemsAsyncTask task = new GetItemsAsyncTask(this);
-            return task.execute().get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             System.out.println("[error]" + e.getMessage());
@@ -80,11 +70,19 @@ public class ItemRepository {
         });
     }
 
+    public void deleteAll(List<Item> items) {
+        daoExecutor.execute(() -> {
+            for (Item item : items) {
+                itemDAO.delete(item);
+            }
+        });
+    }
+
     private static class GetCartItemsAsyncTask extends AsyncTask<Cart, Void, List<Item>> {
         private WeakReference<ItemRepository> weakReference;
 
-        GetCartItemsAsyncTask(ItemRepository itemRepository) {
-            weakReference = new WeakReference<ItemRepository>(itemRepository);
+        public void setWeakReference(WeakReference<ItemRepository> weakReference) {
+            this.weakReference = weakReference;
         }
 
         @Override
@@ -92,21 +90,6 @@ public class ItemRepository {
             ItemRepository reference = weakReference.get();
             if (reference == null) return null;
             return reference.itemDAO.getCartItems(carts[0].getId());
-        }
-    }
-
-    private static class GetItemsAsyncTask extends AsyncTask<Void, Void, List<Item>> {
-        private WeakReference<ItemRepository> weakReference;
-
-        GetItemsAsyncTask(ItemRepository itemRepository) {
-            weakReference = new WeakReference<ItemRepository>(itemRepository);
-        }
-
-        @Override
-        protected List<Item> doInBackground(Void... voids) {
-            ItemRepository reference = weakReference.get();
-            if (reference == null) return null;
-            return reference.itemDAO.getItems();
         }
     }
 }

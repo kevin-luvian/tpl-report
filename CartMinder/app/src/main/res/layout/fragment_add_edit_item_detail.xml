@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context=".fragment.AddEditItemDetailFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/ia_image_gallery_background"
+        android:src="@drawable/ia_image_gallery_foreground" />
+
+    <TextView
+        android:id="@+id/edit_image_path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/hint_image_path"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <EditText
+        android:id="@+id/edit_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_category"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edit_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_weight"
+        android:inputType="numberSigned" />
+
+    <EditText
+        android:id="@+id/edit_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_details"
+        android:inputType="numberSigned" />
+
+</LinearLayout>

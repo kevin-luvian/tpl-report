@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".fragment.AddEditCartFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -24,6 +24,8 @@
             android:id="@+id/edit_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/edit_title"
+            android:focusable="false"
             android:hint="@string/hint_time"
             android:inputType="text" />
 
@@ -31,9 +33,22 @@
             android:id="@+id/items_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/edit_time"
+            android:layout_above="@id/cart_total_items_price"
             android:layout_marginVertical="5dp"
             tools:listitem="@layout/card_item" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/cart_total_items_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="80dp"
+            android:gravity="end"
+            android:textAlignment="gravity"
+            android:text="@string/price_value"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+    </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/items_button_add"

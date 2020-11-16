@@ -61,9 +61,9 @@ public class CartsFragment extends Fragment {
     }
 
     private void launchCartItemsFragment(Cart cart) {
-        CartItemsFragment cartItemsFragment = new CartItemsFragment(cart);
+        CartFragment cartFragment = new CartFragment(cart);
         FragmentTransaction transaction = Objects.requireNonNull(getFragmentManager()).beginTransaction();
-        transaction.replace(R.id.layout_fragment_container, cartItemsFragment);
+        transaction.replace(R.id.layout_fragment_container, cartFragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

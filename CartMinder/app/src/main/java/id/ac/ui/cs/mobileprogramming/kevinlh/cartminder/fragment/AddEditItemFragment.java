@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,6 +38,7 @@ public class AddEditItemFragment extends Fragment {
     EditText editTitle;
     EditText editDescription;
     EditText editPrice;
+    Button buttonDetail;
 
     public AddEditItemFragment() {
         this(new Item(), false);
@@ -52,6 +53,17 @@ public class AddEditItemFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(getActivity().getApplication());
+        cartViewModel = new ViewModelProvider(getActivity(), cartViewModelFactory).get(CartViewModel.class);
+        itemViewModel = new ViewModelProvider(this, ViewModelProvider
+                .AndroidViewModelFactory
+                .getInstance(Objects.requireNonNull(getActivity()).getApplication()))
+                .get(ItemViewModel.class);
+        itemViewModel.setItem(initialItem);
+        if (isEdit) {
+            int position = cartViewModel.getCartItemPosition(initialItem);
+            itemViewModel.setPosition(position);
+        }
     }
 
     @Override
@@ -61,22 +73,22 @@ public class AddEditItemFragment extends Fragment {
         editTitle = view.findViewById(R.id.edit_title);
         editDescription = view.findViewById(R.id.edit_description);
         editPrice = view.findViewById(R.id.edit_price);
+        buttonDetail = view.findViewById(R.id.item_button_detail);
         editTitle.addTextChangedListener(new EditTextWatcher("setTitle"));
         editDescription.addTextChangedListener(new EditTextWatcher("setDescription"));
         editPrice.addTextChangedListener(new EditTextWatcher("setPrice"));
+        if (itemViewModel.isDetailExist()) {
+            buttonDetail.setText(getResources().getString(R.string.button_edit_details));
+            buttonDetail.setOnClickListener(v -> launchEditItemDetailFragment());
+        } else {
+            buttonDetail.setOnClickListener(v -> launchAddItemDetailFragment());
+        }
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(getActivity().getApplication());
-        cartViewModel = new ViewModelProvider(getActivity(), cartViewModelFactory).get(CartViewModel.class);
-        itemViewModel = new ViewModelProvider(this, ViewModelProvider
-                .AndroidViewModelFactory
-                .getInstance(Objects.requireNonNull(getActivity()).getApplication()))
-                .get(ItemViewModel.class);
-        itemViewModel.setItem(initialItem);
         editTitle.setText(initialItem.getTitle());
         editDescription.setText(initialItem.getDescription());
         editPrice.setText(String.valueOf(initialItem.getPrice()));
@@ -91,13 +103,22 @@ public class AddEditItemFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.save_menu:
-                saveItem();
-                return true;
-            default:
-                return false;
+        if (item.getItemId() == R.id.save_menu) {
+            saveItem();
+            return true;
         }
+        return false;
+    }
+
+    private void launchAddItemDetailFragment() {
+        FragmentTransaction transaction = Objects.requireNonNull(getFragmentManager()).beginTransaction();
+        transaction.replace(R.id.layout_fragment_container, new AddEditItemDetailFragment());
+        transaction.addToBackStack("AddEditItemFragment");
+        transaction.commit();
+    }
+
+    private void launchEditItemDetailFragment() {
+
     }
 
     private void saveItem() {
@@ -108,6 +129,7 @@ public class AddEditItemFragment extends Fragment {
             Toast.makeText(getActivity(), getString(R.string.warning_input_is_empty), Toast.LENGTH_SHORT).show();
         } else {
             if (!isEdit) cartViewModel.addCartItem(currentItem);
+            else cartViewModel.replaceCartItem(itemViewModel.getPosition(), currentItem);
             Toast.makeText(getActivity(), "saving item", Toast.LENGTH_SHORT).show();
             FragmentManager fm = getActivity().getSupportFragmentManager();
             fm.popBackStack("AddEditItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -127,21 +149,19 @@ public class AddEditItemFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Item item = itemViewModel.getItem();
             switch (action) {
                 case "setTitle":
-                    itemViewModel.setItemTitle(s.toString());
+                    item.setTitle(s.toString());
                     break;
                 case "setDescription":
-                    itemViewModel.setItemDescription(s.toString());
+                    item.setDescription(s.toString());
                     break;
                 case "setPrice":
                     int price;
-                    if (s.toString().trim().isEmpty()) {
-                        price = 0;
-                    } else {
-                        price = Integer.parseInt(s.toString());
-                    }
-                    itemViewModel.setItemPrice(price);
+                    if (s.toString().trim().isEmpty()) price = 0;
+                    else price = Integer.parseInt(s.toString());
+                    item.setPrice(price);
                     break;
                 default:
                     break;

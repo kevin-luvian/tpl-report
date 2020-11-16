@@ -3,11 +3,13 @@ package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,7 +37,7 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartViewModel;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodelfactory.CartViewModelFactory;
 
-public class AddEditCartFragment extends Fragment {
+public class AddEditCartFragment extends Fragment implements TimePickerDialog.OnTimeSetListener {
     private boolean isEdit;
     private Cart initialCart;
     private CartViewModel cartViewModel;
@@ -70,11 +73,17 @@ public class AddEditCartFragment extends Fragment {
         FloatingActionButton buttonEdit = view.findViewById(R.id.items_button_add);
         buttonEdit.setOnClickListener(v -> launchAddItemFragment());
         editTitle = view.findViewById(R.id.edit_title);
+        editTitle.setText(initialCart.getTitle());
+        editTitle.addTextChangedListener(new EditTextWatcher());
         editTime = view.findViewById(R.id.edit_time);
-        editTitle.addTextChangedListener(new EditTextWatcher("setTitle"));
-        editTime.addTextChangedListener(new EditTextWatcher("setTime"));
-
-        cartViewModel.getCartItems().observe(getViewLifecycleOwner(), this::onItemsUpdate);
+        editTime.setText(initialCart.getTimeString());
+        TimePickerDialog.OnTimeSetListener listener = this;
+        editTime.setOnClickListener(v -> {
+            Cart cart = cartViewModel.getCart();
+            TimePickerFragment timePickerFragment = new TimePickerFragment(cart.getHour(), cart.getMinute());
+            timePickerFragment.setListener(listener);
+            timePickerFragment.show(getFragmentManager(), "timePicker");
+        });
 
         itemsRecyclerView = view.findViewById(R.id.items_recyclerview);
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -85,22 +94,36 @@ public class AddEditCartFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         itemViewAdapter = new ItemViewAdapter();
-//        itemViewAdapter.setItems(cartViewModel.getCartItems().getValue());
-        itemViewAdapter.setListener(new AddEditCartFragment.ItemClickListener());
+        itemViewAdapter.setListener(this::launchEditItemFragment);
         itemsRecyclerView.setAdapter(itemViewAdapter);
-//        if (getArguments() != null) {
-//            Item newItem = (Item) getArguments().getParcelable("Item");
-//            cartViewModel.addCartItem(newItem);
-//        }
 
-        editTitle.setText(initialCart.getTitle());
-        editTime.setText(initialCart.getTimeString());
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.ACTION_STATE_IDLE,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                cartViewModel.removeCartItem(itemViewAdapter.getItemAt(position));
+                itemViewAdapter.notifyDataSetChanged();
+            }
+        }).attachToRecyclerView(itemsRecyclerView);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        cartViewModel.getCartItems().observe(getViewLifecycleOwner(), this::onItemsUpdate);
         Toast.makeText(getActivity(), "cartID: " + initialCart.getId(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("Resuming");
     }
 
     @Override
@@ -111,13 +134,17 @@ public class AddEditCartFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.save_menu:
-                saveCart();
-                return true;
-            default:
-                return false;
+        if (item.getItemId() == R.id.save_menu) {
+            saveCart();
+            return true;
         }
+        return false;
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        cartViewModel.setCartTime(hourOfDay, minute);
+        editTime.setText(cartViewModel.getCart().getTimeString());
     }
 
     private void onItemsUpdate(List<Item> items) {
@@ -129,6 +156,14 @@ public class AddEditCartFragment extends Fragment {
     private void launchAddItemFragment() {
         FragmentTransaction transaction = Objects.requireNonNull(getFragmentManager()).beginTransaction();
         transaction.replace(R.id.layout_fragment_container, new AddEditItemFragment());
+        transaction.addToBackStack("AddEditItemFragment");
+        transaction.commit();
+    }
+
+    private void launchEditItemFragment(Item item) {
+        AddEditItemFragment addEditItemFragment = new AddEditItemFragment(item, true);
+        FragmentTransaction transaction = Objects.requireNonNull(getFragmentManager()).beginTransaction();
+        transaction.replace(R.id.layout_fragment_container, addEditItemFragment);
         transaction.addToBackStack("AddEditItemFragment");
         transaction.commit();
     }
@@ -145,39 +180,17 @@ public class AddEditCartFragment extends Fragment {
     }
 
     private class EditTextWatcher implements TextWatcher {
-        String action;
-
-        public EditTextWatcher(String action) {
-            this.action = action;
-        }
-
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            switch (action) {
-                case "setTitle":
-                    cartViewModel.setCartTitle(s.toString());
-                    break;
-                case "setTime":
-                    cartViewModel.setCartTime(16, 0);
-                    break;
-                default:
-                    break;
-            }
+            cartViewModel.setCartTitle(s.toString());
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-        }
-    }
-
-    private class ItemClickListener implements ItemViewAdapter.OnClickListener {
-        @Override
-        public void onClick(Item item) {
-            System.out.println("Item clicked");
         }
     }
 }

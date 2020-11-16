@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Calendar;
+
 @Entity(tableName = "cart_table")
 public class Cart {
     @PrimaryKey(autoGenerate = true)
@@ -14,7 +16,11 @@ public class Cart {
     private int minute;
 
     public Cart() {
-        this("", 0, 0);
+        Calendar cal = Calendar.getInstance();
+        this.id = 0;
+        this.title = "";
+        this.hour = cal.get(Calendar.HOUR_OF_DAY);
+        this.minute = cal.get(Calendar.MINUTE);
     }
 
     public Cart(String title, int hour, int minute) {

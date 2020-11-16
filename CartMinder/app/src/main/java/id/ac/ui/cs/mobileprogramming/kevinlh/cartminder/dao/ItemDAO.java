@@ -15,10 +15,10 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
 
 @Dao
 public interface ItemDAO {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Item item);
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Item item);
 
     @Delete

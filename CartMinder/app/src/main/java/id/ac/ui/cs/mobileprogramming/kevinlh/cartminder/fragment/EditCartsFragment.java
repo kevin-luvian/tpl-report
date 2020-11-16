@@ -27,10 +27,15 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartsViewModel
 public class EditCartsFragment extends Fragment {
     private CartsViewModel cartsViewModel;
     private RecyclerView cartsRecyclerView;
+    private EditCartViewAdapter editCartViewAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cartsViewModel = new ViewModelProvider(this, ViewModelProvider
+                .AndroidViewModelFactory
+                .getInstance(Objects.requireNonNull(getActivity()).getApplication()))
+                .get(CartsViewModel.class);
     }
 
     @Override
@@ -50,20 +55,15 @@ public class EditCartsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EditCartViewAdapter editCartViewAdapter = new EditCartViewAdapter();
+        editCartViewAdapter = new EditCartViewAdapter();
         editCartViewAdapter.setListener(new CartClickListener());
         cartsRecyclerView.setAdapter(editCartViewAdapter);
+    }
 
-        cartsViewModel = new ViewModelProvider(this, ViewModelProvider
-                .AndroidViewModelFactory
-                .getInstance(Objects.requireNonNull(getActivity()).getApplication()))
-                .get(CartsViewModel.class);
-        cartsViewModel.getCarts().observe(this, new Observer<List<Cart>>() {
-            @Override
-            public void onChanged(List<Cart> carts) {
-                editCartViewAdapter.setCarts(carts);
-            }
-        });
+    @Override
+    public void onStart() {
+        super.onStart();
+        cartsViewModel.getCarts().observe(this, editCartViewAdapter::setCarts);
     }
 
     private void launchAddCartFragment() {
