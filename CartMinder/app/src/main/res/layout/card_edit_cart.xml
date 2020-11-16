@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:text="Rp. 50.000"
+                android:text="@string/price_value"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </RelativeLayout>
 

@@ -94,7 +94,7 @@ public class AddEditCartFragment extends Fragment {
 //        }
 
         editTitle.setText(initialCart.getTitle());
-        editTime.setText(initialCart.getTime());
+        editTime.setText(initialCart.getTimeString());
     }
 
     @Override
@@ -135,7 +135,7 @@ public class AddEditCartFragment extends Fragment {
 
     private void saveCart() {
         Cart currentCart = cartViewModel.getCart();
-        if (currentCart.getTitle().trim().isEmpty() || currentCart.getTime().trim().isEmpty()) {
+        if (currentCart.getTitle().trim().isEmpty()) {
             Toast.makeText(getActivity(), getString(R.string.warning_input_is_empty), Toast.LENGTH_SHORT).show();
         } else {
             if (isEdit) cartViewModel.update();
@@ -162,7 +162,7 @@ public class AddEditCartFragment extends Fragment {
                     cartViewModel.setCartTitle(s.toString());
                     break;
                 case "setTime":
-                    cartViewModel.setCartTime(s.toString());
+                    cartViewModel.setCartTime(16, 0);
                     break;
                 default:
                     break;

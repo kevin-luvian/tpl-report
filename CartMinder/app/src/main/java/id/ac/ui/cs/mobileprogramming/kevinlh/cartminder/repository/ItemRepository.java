@@ -1,9 +1,11 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.repository;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -29,11 +31,24 @@ public class ItemRepository {
         itemDAO = database.itemDAO();
     }
 
-    public List<Item> getCartItems(Cart cart){
+    public List<Item> getCartItems(Cart cart) {
         try {
-            return daoExecutor.submit(() -> itemDAO.getCartItems(cart.getId())).get();
+            GetCartItemsAsyncTask task = new GetCartItemsAsyncTask(this);
+            return task.execute(cart).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
+            System.out.println("[error]" + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Item> getItems() {
+        try {
+            GetItemsAsyncTask task = new GetItemsAsyncTask(this);
+            return task.execute().get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println("[error]" + e.getMessage());
             return null;
         }
     }
@@ -56,9 +71,42 @@ public class ItemRepository {
         });
     }
 
-    public void insertAll(List<Item> items) {
+    public void insertAll(List<Item> items, long cartId) {
         daoExecutor.execute(() -> {
-            itemDAO.insertAll(items);
+            for (Item item : items) {
+                item.setCartId(cartId);
+                itemDAO.insert(item);
+            }
         });
+    }
+
+    private static class GetCartItemsAsyncTask extends AsyncTask<Cart, Void, List<Item>> {
+        private WeakReference<ItemRepository> weakReference;
+
+        GetCartItemsAsyncTask(ItemRepository itemRepository) {
+            weakReference = new WeakReference<ItemRepository>(itemRepository);
+        }
+
+        @Override
+        protected List<Item> doInBackground(Cart... carts) {
+            ItemRepository reference = weakReference.get();
+            if (reference == null) return null;
+            return reference.itemDAO.getCartItems(carts[0].getId());
+        }
+    }
+
+    private static class GetItemsAsyncTask extends AsyncTask<Void, Void, List<Item>> {
+        private WeakReference<ItemRepository> weakReference;
+
+        GetItemsAsyncTask(ItemRepository itemRepository) {
+            weakReference = new WeakReference<ItemRepository>(itemRepository);
+        }
+
+        @Override
+        protected List<Item> doInBackground(Void... voids) {
+            ItemRepository reference = weakReference.get();
+            if (reference == null) return null;
+            return reference.itemDAO.getItems();
+        }
     }
 }

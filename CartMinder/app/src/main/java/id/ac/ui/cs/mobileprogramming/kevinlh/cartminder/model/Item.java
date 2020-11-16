@@ -1,25 +1,30 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import static androidx.room.ForeignKey.CASCADE;
+import org.jetbrains.annotations.NotNull;
+
 
 @Entity(tableName = "item_table")
-public class Item implements Parcelable {
+public class Item {
     @PrimaryKey(autoGenerate = true)
     private long id;
     @ForeignKey(
             entity = Cart.class,
             parentColumns = "id",
             childColumns = "cartId",
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
     )
     private long cartId;
+    @ForeignKey(
+            entity = ItemDetail.class,
+            parentColumns = "id",
+            childColumns = "detailId",
+            onDelete = ForeignKey.SET_NULL
+    )
+    private long detailId;
     private String title;
     private String description;
     private int price;
@@ -29,30 +34,11 @@ public class Item implements Parcelable {
     }
 
     public Item(String title, String description, int price) {
+        this.id = 0;
         this.title = title;
         this.description = description;
         this.price = price;
     }
-
-    protected Item(Parcel in) {
-        id = in.readLong();
-        cartId = in.readLong();
-        title = in.readString();
-        description = in.readString();
-        price = in.readInt();
-    }
-
-    public static final Creator<Item> CREATOR = new Creator<Item>() {
-        @Override
-        public Item createFromParcel(Parcel in) {
-            return new Item(in);
-        }
-
-        @Override
-        public Item[] newArray(int size) {
-            return new Item[size];
-        }
-    };
 
     public long getId() {
         return id;
@@ -68,6 +54,14 @@ public class Item implements Parcelable {
 
     public void setCartId(long cartId) {
         this.cartId = cartId;
+    }
+
+    public long getDetailId() {
+        return detailId;
+    }
+
+    public void setDetailId(long detailId) {
+        this.detailId = detailId;
     }
 
     public String getTitle() {
@@ -94,28 +88,16 @@ public class Item implements Parcelable {
         this.price = price;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "Item{" +
                 "id=" + id +
                 ", cartId=" + cartId +
+                ", detailId=" + detailId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeLong(cartId);
-        dest.writeString(title);
-        dest.writeString(description);
-        dest.writeInt(price);
     }
 }

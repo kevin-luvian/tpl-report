@@ -18,10 +18,6 @@ public interface ItemDAO {
     @Insert
     void insert(Item item);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    @WorkerThread
-    void insertAll(List<Item> items);
-
     @Update
     void update(Item item);
 
@@ -29,8 +25,8 @@ public interface ItemDAO {
     void delete(Item item);
 
     @Query("SELECT * FROM item_table")
-    LiveData<List<Item>> getItems();
+    List<Item> getItems();
 
     @Query("SELECT * FROM item_table WHERE cartId=:cartId")
-    List<Item> getCartItems(Long cartId);
+    List<Item> getCartItems(long cartId);
 }

@@ -48,8 +48,8 @@ public abstract class Database extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            asyncCartDAO.insert(new Cart("Cart Obj#1", "16:00"));
-            asyncCartDAO.insert(new Cart("Cart Obj#2", "15:00"));
+            asyncCartDAO.insert(new Cart("Cart Obj#1", 16, 0));
+            asyncCartDAO.insert(new Cart("Cart Obj#2", 15, 40));
             return null;
         }
     }

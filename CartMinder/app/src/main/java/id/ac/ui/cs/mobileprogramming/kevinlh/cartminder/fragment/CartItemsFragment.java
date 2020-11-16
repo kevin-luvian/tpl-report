@@ -24,6 +24,7 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.adapter.ItemViewAdapter;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Cart;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartViewModel;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodelfactory.CartViewModelFactory;
 
 public class CartItemsFragment extends Fragment {
     private Cart initialCart;
@@ -38,11 +39,22 @@ public class CartItemsFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(getActivity().getApplication());
+        cartViewModel = new ViewModelProvider(getActivity(), cartViewModelFactory).get(CartViewModel.class);
+        cartViewModel.setCart(initialCart);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart_items, container, false);
         cartTitle = view.findViewById(R.id.cart_title);
         cartTime = view.findViewById(R.id.cart_time);
+        cartTitle.setText(initialCart.getTitle());
+        cartTime.setText(initialCart.getTimeString());
 
         itemsRecyclerView = view.findViewById(R.id.items_recyclerview);
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -52,25 +64,14 @@ public class CartItemsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        cartViewModel = new ViewModelProvider(this, ViewModelProvider
-                .AndroidViewModelFactory
-                .getInstance(Objects.requireNonNull(getActivity()).getApplication()))
-                .get(CartViewModel.class);
-        cartViewModel.setCart(initialCart);
-        cartTitle.setText(initialCart.getTitle());
-        cartTime.setText(initialCart.getTime());
 
         ItemViewAdapter itemViewAdapter = new ItemViewAdapter();
         itemViewAdapter.setListener(new ItemClickListener());
         itemsRecyclerView.setAdapter(itemViewAdapter);
-
-        cartViewModel.getCartItems().observe(this, new Observer<List<Item>>() {
-            @Override
-            public void onChanged(List<Item> items) {
-                System.out.println("Items");
-                System.out.println(items.toString());
-                itemViewAdapter.setItems(items);
-            }
+        cartViewModel.getCartItems().observe(this, items -> {
+            System.out.println("Items");
+            System.out.println(items.toString());
+            itemViewAdapter.setItems(items);
         });
     }
 

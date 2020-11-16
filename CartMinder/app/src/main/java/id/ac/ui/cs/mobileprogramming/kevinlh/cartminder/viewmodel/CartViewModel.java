@@ -30,7 +30,11 @@ public class CartViewModel extends ViewModel {
 
     public void setCart(Cart cart) {
         this.cart = cart;
-        liveItems.setValue(itemRepository.getCartItems(cart));
+        List<Item> cartItems = itemRepository.getCartItems(cart);
+        if (cartItems == null) {
+            cartItems = new ArrayList<Item>();
+        }
+        liveItems.setValue(cartItems);
     }
 
     public Cart getCart() {
@@ -41,8 +45,9 @@ public class CartViewModel extends ViewModel {
         this.cart.setTitle(title);
     }
 
-    public void setCartTime(String time) {
-        this.cart.setTime(time);
+    public void setCartTime(int hour, int minute) {
+        this.cart.setHour(hour);
+        this.cart.setMinute(minute);
     }
 
     public LiveData<List<Item>> getCartItems() {
@@ -61,8 +66,10 @@ public class CartViewModel extends ViewModel {
     }
 
     public void insert() {
-        cartRepository.insert(cart);
-        itemRepository.insertAll(liveItems.getValue());
+        long cartId = cartRepository.insert(cart);
+        if (cartId != -1) {
+            itemRepository.insertAll(liveItems.getValue(), cartId);
+        }
     }
 
     public void update() {

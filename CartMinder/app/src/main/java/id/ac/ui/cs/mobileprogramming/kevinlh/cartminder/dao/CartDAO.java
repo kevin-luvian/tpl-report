@@ -14,7 +14,7 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Cart;
 @Dao
 public interface CartDAO {
     @Insert
-    Long insert(Cart cart);
+    long insert(Cart cart);
 
     @Update
     void update(Cart cart);
@@ -22,6 +22,9 @@ public interface CartDAO {
     @Delete
     void delete(Cart cart);
 
-    @Query("SELECT * FROM cart_table ORDER BY time ASC")
+    @Query("SELECT * FROM cart_table ORDER BY hour ASC, minute ASC")
+    LiveData<List<Cart>> getCartsOrdered();
+
+    @Query("SELECT * FROM cart_table")
     LiveData<List<Cart>> getCarts();
 }
