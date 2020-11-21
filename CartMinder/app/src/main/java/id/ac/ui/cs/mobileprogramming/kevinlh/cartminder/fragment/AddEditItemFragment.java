@@ -28,6 +28,7 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartViewModel;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.ItemViewModel;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodelfactory.CartViewModelFactory;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodelfactory.ItemViewModelFactory;
 
 public class AddEditItemFragment extends Fragment {
     private boolean isEdit;
@@ -53,12 +54,10 @@ public class AddEditItemFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(getActivity().getApplication());
-        cartViewModel = new ViewModelProvider(getActivity(), cartViewModelFactory).get(CartViewModel.class);
-        itemViewModel = new ViewModelProvider(this, ViewModelProvider
-                .AndroidViewModelFactory
-                .getInstance(Objects.requireNonNull(getActivity()).getApplication()))
-                .get(ItemViewModel.class);
+        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(Objects.requireNonNull(getActivity()).getApplication());
+        cartViewModel = new ViewModelProvider(Objects.requireNonNull(getActivity()), cartViewModelFactory).get(CartViewModel.class);
+        ItemViewModelFactory itemViewModelFactory = new ItemViewModelFactory(getActivity().getApplication());
+        itemViewModel = new ViewModelProvider(getActivity(), itemViewModelFactory).get(ItemViewModel.class);
         itemViewModel.setItem(initialItem);
         if (isEdit) {
             int position = cartViewModel.getCartItemPosition(initialItem);
@@ -77,11 +76,10 @@ public class AddEditItemFragment extends Fragment {
         editTitle.addTextChangedListener(new EditTextWatcher("setTitle"));
         editDescription.addTextChangedListener(new EditTextWatcher("setDescription"));
         editPrice.addTextChangedListener(new EditTextWatcher("setPrice"));
-        if (itemViewModel.isDetailExist()) {
-            buttonDetail.setText(getResources().getString(R.string.button_edit_details));
+        if (isEdit) {
             buttonDetail.setOnClickListener(v -> launchEditItemDetailFragment());
         } else {
-            buttonDetail.setOnClickListener(v -> launchAddItemDetailFragment());
+            buttonDetail.setVisibility(View.INVISIBLE);
         }
         return view;
     }
@@ -89,10 +87,11 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        editTitle.setText(initialItem.getTitle());
-        editDescription.setText(initialItem.getDescription());
-        editPrice.setText(String.valueOf(initialItem.getPrice()));
-        Toast.makeText(getActivity(), "itemID: " + initialItem.getId(), Toast.LENGTH_SHORT).show();
+        Item item = itemViewModel.getItem();
+        editTitle.setText(item.getTitle());
+        editDescription.setText(item.getDescription());
+        editPrice.setText(String.valueOf(item.getPrice()));
+//        Toast.makeText(getActivity(), "itemID: " + item.getId(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -110,15 +109,11 @@ public class AddEditItemFragment extends Fragment {
         return false;
     }
 
-    private void launchAddItemDetailFragment() {
+    private void launchEditItemDetailFragment() {
         FragmentTransaction transaction = Objects.requireNonNull(getFragmentManager()).beginTransaction();
         transaction.replace(R.id.layout_fragment_container, new AddEditItemDetailFragment());
-        transaction.addToBackStack("AddEditItemFragment");
+        transaction.addToBackStack("AddEditItemDetailFragment");
         transaction.commit();
-    }
-
-    private void launchEditItemDetailFragment() {
-
     }
 
     private void saveItem() {
@@ -128,10 +123,13 @@ public class AddEditItemFragment extends Fragment {
                 || currentItem.getPrice() < 0) {
             Toast.makeText(getActivity(), getString(R.string.warning_input_is_empty), Toast.LENGTH_SHORT).show();
         } else {
-            if (!isEdit) cartViewModel.addCartItem(currentItem);
-            else cartViewModel.replaceCartItem(itemViewModel.getPosition(), currentItem);
-            Toast.makeText(getActivity(), "saving item", Toast.LENGTH_SHORT).show();
-            FragmentManager fm = getActivity().getSupportFragmentManager();
+            if (isEdit) {
+                cartViewModel.replaceCartItem(itemViewModel.getPosition(), currentItem);
+                itemViewModel.saveItem();
+            } else {
+                cartViewModel.addCartItem(currentItem);
+            }
+            FragmentManager fm = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
             fm.popBackStack("AddEditItemFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }

@@ -22,12 +22,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.R;
@@ -46,6 +48,7 @@ public class AddEditCartFragment extends Fragment implements TimePickerDialog.On
 
     EditText editTitle;
     EditText editTime;
+    TextView cartTotalPrice;
 
     public AddEditCartFragment() {
         this(new Cart(), false);
@@ -61,7 +64,7 @@ public class AddEditCartFragment extends Fragment implements TimePickerDialog.On
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(getActivity().getApplication());
+        CartViewModelFactory cartViewModelFactory = new CartViewModelFactory(Objects.requireNonNull(getActivity()).getApplication());
         cartViewModel = new ViewModelProvider(getActivity(), cartViewModelFactory).get(CartViewModel.class);
         cartViewModel.setCart(initialCart);
     }
@@ -77,6 +80,8 @@ public class AddEditCartFragment extends Fragment implements TimePickerDialog.On
         editTitle.addTextChangedListener(new EditTextWatcher());
         editTime = view.findViewById(R.id.edit_time);
         editTime.setText(initialCart.getTimeString());
+        cartTotalPrice = view.findViewById(R.id.cart_total_items_price);
+        cartTotalPrice.setText(String.format(Locale.US, "%,d IDR", cartViewModel.getTotalPrice()));
         TimePickerDialog.OnTimeSetListener listener = this;
         editTime.setOnClickListener(v -> {
             Cart cart = cartViewModel.getCart();
@@ -117,7 +122,7 @@ public class AddEditCartFragment extends Fragment implements TimePickerDialog.On
     public void onStart() {
         super.onStart();
         cartViewModel.getCartItems().observe(getViewLifecycleOwner(), this::onItemsUpdate);
-        Toast.makeText(getActivity(), "cartID: " + initialCart.getId(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), "cartID: " + initialCart.getId(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

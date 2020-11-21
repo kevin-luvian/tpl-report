@@ -9,4 +9,20 @@
     <string name="warning_input_is_empty">isi tidak boleh kosong</string>
     <string name="hint_description">Description</string>
     <string name="hint_price">Price</string>
+    <string name="price_value">Rp. 50.000</string>
+    <string name="button_view_details">Lihat Detil</string>
+    <string name="hint_category">Kategori</string>
+    <string name="hint_weight">Berat</string>
+    <string name="hint_details">Detil Barang</string>
+    <string name="hint_path">Lokasi Berkas</string>
+    <string name="button_add_details">Tambah Detil</string>
+    <string name="button_edit_details">Edit Detil</string>
+    <string name="hint_image_path">Lokasi Gambar</string>
+    <string name="image_gallery">Galeri Gambar</string>
+    <string name="choose_image">Pilih Gambar</string>
+    <string name="hint_total_price">Total : Rp. 50,000</string>
+    <string name="toast_message_no_detail">Barang tidak mempunyai detil</string>
+    <string name="toast_message_alarm_prefix">Alarm diset pada</string>
+    <string name="notification_title">[CartMinder] Alarm Menyala</string>
+    <string name="notification_message_prefix">Waktunya pergi belanja untuk</string>
 </resources>

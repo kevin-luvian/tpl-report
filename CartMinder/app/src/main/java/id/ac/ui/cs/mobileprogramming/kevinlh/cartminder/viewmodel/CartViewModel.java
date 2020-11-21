@@ -56,6 +56,14 @@ public class CartViewModel extends ViewModel {
         return liveItems;
     }
 
+    public long getTotalPrice() {
+        long totalPrice = 0;
+        for (Item item : liveItems.getValue()) {
+            totalPrice += item.getPrice();
+        }
+        return totalPrice;
+    }
+
     public void addCartItem(Item item) {
         liveItems.getValue().add(item);
     }

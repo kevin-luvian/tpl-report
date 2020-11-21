@@ -8,41 +8,92 @@
     tools:context=".fragment.ItemDetailFragment">
 
     <ImageView
+        android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:src="@drawable/ia_image_gallery_foreground"
-        android:background="@color/ia_image_gallery_background"/>
+        android:background="@color/ia_image_gallery_background"
+        android:src="@drawable/ia_image_gallery_foreground" />
 
-    <TextView
-        android:id="@+id/item_detail_path"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/hint_path"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/item_detail_category"
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_category"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/colon"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/item_detail_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_category"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/hint_category"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/item_detail_weight"
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_weight"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/colon"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/item_detail_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_weight"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/hint_weight"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hint_details"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:text="@string/colon"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/item_detail_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:minHeight="100dp"
+        android:padding="10dp"
         android:text="@string/hint_details"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 </LinearLayout>

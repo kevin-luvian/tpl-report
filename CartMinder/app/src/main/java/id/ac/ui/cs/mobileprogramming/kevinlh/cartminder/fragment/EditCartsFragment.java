@@ -1,27 +1,35 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.R;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.adapter.EditCartViewAdapter;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Cart;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.utils.AlarmReceiver;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartsViewModel;
 
 public class EditCartsFragment extends Fragment {
@@ -48,7 +56,7 @@ public class EditCartsFragment extends Fragment {
         buttonEdit.setOnClickListener(v -> launchAddCartFragment());
 
         cartsRecyclerView = view.findViewById(R.id.carts_recyclerview);
-        cartsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        cartsRecyclerView.setLayoutManager(getLayoutManager());
         return view;
     }
 
@@ -58,12 +66,16 @@ public class EditCartsFragment extends Fragment {
         editCartViewAdapter = new EditCartViewAdapter();
         editCartViewAdapter.setListener(new CartClickListener());
         cartsRecyclerView.setAdapter(editCartViewAdapter);
+        cartsViewModel.getCarts().observe(this, carts -> {
+            editCartViewAdapter.setCarts(carts);
+            setAlarms(carts);
+        });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        cartsViewModel.getCarts().observe(this, editCartViewAdapter::setCarts);
+    private RecyclerView.LayoutManager getLayoutManager() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            return new GridLayoutManager(getContext(), 2);
+        return new LinearLayoutManager(getContext());
     }
 
     private void launchAddCartFragment() {
@@ -79,6 +91,27 @@ public class EditCartsFragment extends Fragment {
         transaction.replace(R.id.layout_fragment_container, addEditCartFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void setAlarms(List<Cart> carts) {
+        for (Cart cart : carts) {
+            Calendar cal = cart.getTimeAsCalendar();
+            startAlarm(cal, cart);
+        }
+    }
+
+    private void startAlarm(Calendar cal, Cart cart) {
+        if (System.currentTimeMillis() > cal.getTimeInMillis()) return;
+        int id = (int) cart.getId();
+        AlarmManager alarmManager = (AlarmManager) Objects.requireNonNull(getActivity()).getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        intent.putExtra("cartId", id);
+        intent.putExtra("cartTitle", cart.getTitle());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), id, intent, 0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+//        Toast.makeText(getContext(),
+//                getResources().getString(R.string.toast_message_alarm_prefix) + " " + cart.getTimeString(),
+//                Toast.LENGTH_SHORT).show();
     }
 
     private class CartClickListener implements EditCartViewAdapter.OnCartClickListener {

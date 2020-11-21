@@ -1,6 +1,7 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,6 +18,10 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.fragment.EditCartsFragme
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.viewmodel.CartsViewModel;
 
 public class EditActivity extends AppCompatActivity {
+
+    public EditActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +29,13 @@ public class EditActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setTitle("Edit Carts");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.layout_fragment_container);
+        layout.removeAllViewsInLayout();
 
         Fragment mainFragment = new EditCartsFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

@@ -10,16 +10,20 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.dao.CartDAO;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.dao.ItemDAO;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.dao.ItemDetailDAO;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Cart;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.ItemDetail;
 
-@androidx.room.Database(entities = {Cart.class, Item.class}, version = 1)
+@androidx.room.Database(entities = {Cart.class, Item.class, ItemDetail.class}, version = 1)
 public abstract class Database extends RoomDatabase {
     private static Database instance;
 
     public abstract CartDAO cartDAO();
 
     public abstract ItemDAO itemDAO();
+
+    public abstract ItemDetailDAO itemDetailDAO();
 
     public static synchronized Database getInstance(Context context) {
         if (instance == null) {

@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+
 
 @Entity(tableName = "item_table")
 public class Item {
@@ -22,7 +24,7 @@ public class Item {
             entity = ItemDetail.class,
             parentColumns = "id",
             childColumns = "detailId",
-            onDelete = ForeignKey.SET_NULL
+            onDelete = ForeignKey.NO_ACTION
     )
     private long detailId;
     private String title;
@@ -86,6 +88,10 @@ public class Item {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getPriceToString() {
+        return String.format(Locale.US, "%,d IDR", price);
     }
 
     @NotNull

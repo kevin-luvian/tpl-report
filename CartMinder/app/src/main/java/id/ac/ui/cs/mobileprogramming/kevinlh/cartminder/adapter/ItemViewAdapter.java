@@ -33,7 +33,7 @@ public class ItemViewAdapter extends RecyclerView.Adapter<ItemViewAdapter.CartVi
         Item item = items.get(position);
         holder.tvItemTitle.setText(item.getTitle());
         holder.tvItemDescription.setText(item.getDescription());
-        holder.tvItemPrice.setText(String.valueOf(item.getPrice()));
+        holder.tvItemPrice.setText(item.getPriceToString());
     }
 
     @Override

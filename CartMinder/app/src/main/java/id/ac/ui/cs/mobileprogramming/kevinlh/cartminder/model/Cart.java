@@ -67,6 +67,15 @@ public class Cart {
         return String.format("%02d:%02d", hour, minute);
     }
 
+    public Calendar getTimeAsCalendar() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        return cal;
+    }
+
     @Override
     public String toString() {
         return "Cart{" +

@@ -1,5 +1,7 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.adapter;
 
+import android.annotation.SuppressLint;
+import android.app.Application;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,15 +10,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.R;
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Cart;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.model.Item;
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder.repository.ItemRepository;
 
 public class CartViewAdapter extends RecyclerView.Adapter<CartViewAdapter.CartViewHolder> {
     private OnCartClickListener listener;
     private List<Cart> carts = new ArrayList<>();
+    private final ItemRepository itemRepository;
+
+    public CartViewAdapter(Application application) {
+        itemRepository = new ItemRepository(application);
+    }
 
     @NonNull
     @Override
@@ -32,7 +43,7 @@ public class CartViewAdapter extends RecyclerView.Adapter<CartViewAdapter.CartVi
         Cart cart = carts.get(position);
         holder.tvCardTitle.setText(cart.getTitle());
         holder.tvCardTime.setText(cart.getTimeString());
-        holder.tvCardTotalPrice.setText("Rp. 50.000");
+        holder.tvCardTotalPrice.setText(calculateTotalPrice(cart));
     }
 
     @Override
@@ -40,9 +51,20 @@ public class CartViewAdapter extends RecyclerView.Adapter<CartViewAdapter.CartVi
         return carts.size();
     }
 
+    @SuppressLint("DefaultLocale")
+    private String calculateTotalPrice(Cart cart) {
+        List<Item> items = itemRepository.getCartItems(cart);
+        long result = 0;
+        for (Item item : items) {
+            result += item.getPrice();
+        }
+        return String.format(Locale.US, "%,d IDR", result);
+
+    }
+
     public void setCarts(List<Cart> carts) {
         this.carts = carts;
-        notifyDataSetChanged(); // Replace this
+        notifyDataSetChanged();
     }
 
     public interface OnCartClickListener {
