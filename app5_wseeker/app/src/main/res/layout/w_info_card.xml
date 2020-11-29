@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_16"
+    android:elevation="@dimen/space_24"
+    app:cardCornerRadius="@dimen/space_8">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/network_image"
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:background="?attr/colorPrimary"
+            android:contentDescription="@string/undefined_text"
+            android:padding="22dp"
+            android:src="@drawable/wifi_img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/scan_location_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_16"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="?attr/colorPrimaryVariant"
+            app:cardCornerRadius="4dp"
+            app:layout_constraintStart_toStartOf="@+id/network_ssid"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/network_scan_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/shanti"
+                android:paddingHorizontal="@dimen/space_16"
+                android:paddingVertical="2dp"
+                android:textColor="@color/light"
+                android:textSize="12sp"
+                tools:text="local" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/network_ssid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_8"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="@dimen/space_16"
+            android:fontFamily="@font/shanti"
+            android:text="@string/wifi_name_placeholder"
+            android:textColor="@color/dark_gray"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/network_image"
+            app:layout_constraintTop_toBottomOf="@+id/scan_location_wrapper" />
+
+        <TextView
+            android:id="@+id/network_mac"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_8"
+            android:layout_marginEnd="@dimen/space_16"
+            android:fontFamily="@font/shanti"
+            android:textColor="@color/gray_shade"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/network_image"
+            app:layout_constraintTop_toBottomOf="@+id/network_ssid"
+            tools:text="FE:AB:0T:K5" />
+
+        <TextView
+            android:id="@+id/network_capabilities"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_8"
+            android:layout_marginTop="@dimen/space_8"
+            android:fontFamily="@font/shanti"
+            android:paddingBottom="@dimen/space_16"
+            android:textColor="@color/gray_shade"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/network_channel"
+            app:layout_constraintStart_toEndOf="@+id/network_image"
+            app:layout_constraintTop_toBottomOf="@+id/network_mac"
+            tools:text="[WPA2-PSK-CCMP][ESS]" />
+
+        <TextView
+            android:id="@+id/network_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_16"
+            android:fontFamily="@font/shanti"
+            android:textColor="@color/gray_shade"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/network_capabilities"
+            tools:text="channel 7" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
