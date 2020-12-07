@@ -2,7 +2,6 @@ package id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.viewmodel;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -35,7 +34,7 @@ public class NetworksViewModel extends ViewModel {
     }
 
     public void scanNetworks() {
-        updateLiveNetworks(networkHelper.getNetworks());
+        updateLiveNetworks(networkHelper.scanLocalNetworks());
     }
 
     public void updateLiveNetworks(List<NetworkInfo> networks) {
@@ -62,8 +61,8 @@ public class NetworksViewModel extends ViewModel {
         }
 
         @Override
-        protected void onPostExecute(List<NetworkInfo> networkInfos) {
-            updateLiveNetworks(networkInfos);
+        protected void onPostExecute(List<NetworkInfo> networkInfoList) {
+            updateLiveNetworks(networkInfoList);
         }
     }
 
@@ -79,18 +78,14 @@ public class NetworksViewModel extends ViewModel {
 
         @Override
         protected List<NetworkInfo> doInBackground(Void... voids) {
-            List<NetworkInfo> networkInfos = ApiClient.convergeList(newNetworks, oldNetworks);
-            networkInfos.sort((o1, o2) -> {
-                int level = o2.getLevel() - o1.getLevel();
-                if (level != 0) return level;
-                return o1.getSsid().compareTo(o2.getSsid());
-            });
-            return networkInfos;
+            List<NetworkInfo> networkInfoList = ApiClient.convergeNetworkInfoList(newNetworks, oldNetworks);
+            networkInfoList.sort(NetworkInfo::compareNetworkInfo);
+            return networkInfoList;
         }
 
         @Override
-        protected void onPostExecute(List<NetworkInfo> networkInfos) {
-            liveNetworks.setValue(networkInfos);
+        protected void onPostExecute(List<NetworkInfo> networkInfoList) {
+            liveNetworks.setValue(networkInfoList);
         }
     }
 }

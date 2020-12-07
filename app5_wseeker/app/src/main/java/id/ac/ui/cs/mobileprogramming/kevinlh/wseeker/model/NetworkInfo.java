@@ -1,11 +1,6 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.model;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class NetworkInfo {
     public static final String STRING_UNDEFINED = "undefined";
@@ -44,6 +39,13 @@ public class NetworkInfo {
         return string == null || string.isEmpty();
     }
 
+    public static int convertSignalLevel(int level) {
+        if (level >= -60) return LEVEL_HIGH;
+        else if (level <= -60 && level >= -80) return LEVEL_MEDIUM;
+        else if (level >= -95) return LEVEL_LOW;
+        else return LEVEL_UNDEFINED;
+    }
+
     public int getChannel() {
         for (int i = 0; i < frequencies.length - 1; i++) {
             for (int j = 0; j < frequencies[i].length - 1; j++) {
@@ -51,13 +53,6 @@ public class NetworkInfo {
             }
         }
         return 0;
-    }
-
-    public static int convertSignalLevel(int level) {
-        if (level >= -60) return LEVEL_HIGH;
-        else if (level <= -60 && level >= -80) return LEVEL_MEDIUM;
-        else if (level >= -95) return LEVEL_LOW;
-        else return LEVEL_UNDEFINED;
     }
 
     public String getId() {
@@ -120,6 +115,12 @@ public class NetworkInfo {
     public void setCapabilities(String capabilities) {
         if (isEmptyString(capabilities)) capabilities = STRING_UNDEFINED;
         this.capabilities = capabilities;
+    }
+
+    public static int compareNetworkInfo(NetworkInfo o1, NetworkInfo o2) {
+        int levelDifference = o2.getLevel() - o1.getLevel();
+        if (levelDifference != 0) return levelDifference;
+        return o1.getSsid().compareTo(o2.getSsid());
     }
 
     @Override

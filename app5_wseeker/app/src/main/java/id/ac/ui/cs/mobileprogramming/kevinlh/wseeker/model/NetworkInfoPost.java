@@ -1,7 +1,5 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.model;
 
-import com.google.gson.annotations.SerializedName;
-
 public class NetworkInfoPost {
     private String mac;
     private String ssid;

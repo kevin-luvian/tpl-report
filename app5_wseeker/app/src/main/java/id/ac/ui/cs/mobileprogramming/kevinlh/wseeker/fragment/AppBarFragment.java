@@ -1,9 +1,7 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -55,7 +53,7 @@ public class AppBarFragment extends Fragment {
                     Toast.makeText(getActivity(), "deleting...", Toast.LENGTH_SHORT).show();
                     break;
             }
-            return false;
+            return true;
         });
         popupMenu.inflate(R.menu.popup);
         popupMenu.show();

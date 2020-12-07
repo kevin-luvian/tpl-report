@@ -2,8 +2,11 @@ package id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.api;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -13,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.model.NetworkInfo;
 import id.ac.ui.cs.mobileprogramming.kevinlh.wseeker.model.NetworkInfoPost;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -25,14 +30,13 @@ public class ApiClient {
     ApiQuery apiQuery;
 
     public ApiClient() {
+        executor = new ThreadPoolExecutor(3, 5, 0L,
+                TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiQuery = retrofit.create(ApiQuery.class);
-
-        executor = new ThreadPoolExecutor(3, 5, 0L,
-                TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     }
 
     public List<NetworkInfo> fetchNetworks() {
@@ -77,7 +81,7 @@ public class ApiClient {
     public void uploadNetworks(List<NetworkInfo> networks) {
         executor.execute(() -> {
             List<NetworkInfo> fetchedNetworks = fetchNetworks();
-            List<NetworkInfo> convergedList = convergeList(networks, fetchedNetworks);
+            List<NetworkInfo> convergedList = convergeNetworkInfoList(networks, fetchedNetworks);
             for (NetworkInfo network : convergedList) {
                 NetworkInfoPost post = new NetworkInfoPost(network);
                 executor.execute(() -> {
@@ -102,7 +106,7 @@ public class ApiClient {
         });
     }
 
-    public static List<NetworkInfo> convergeList(
+    public static List<NetworkInfo> convergeNetworkInfoList(
             List<NetworkInfo> newList,
             List<NetworkInfo> oldList) {
         HashMap<String, IdPos> map = parseToIdPos(oldList);
