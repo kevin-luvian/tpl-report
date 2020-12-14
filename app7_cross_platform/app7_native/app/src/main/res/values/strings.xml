@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Native Demo Home Page</string>
+    <string name="static_desc">You have pushed the button this many times:</string>
+</resources>
