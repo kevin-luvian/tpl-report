@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item android:title="@string/menu_other">
+        <menu>
+            <item
+                android:id="@+id/menu_sync"
+                android:icon="@drawable/ic_sync"
+                android:title="@string/menu_sync" />
+            <item
+                android:id="@+id/menu_opengl"
+                android:icon="@drawable/ic_bubble_chart"
+                android:title="@string/menu_opengl" />
+        </menu>
+    </item>
+</menu>
