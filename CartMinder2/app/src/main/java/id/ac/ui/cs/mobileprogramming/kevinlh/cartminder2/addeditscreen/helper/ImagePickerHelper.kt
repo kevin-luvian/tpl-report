@@ -4,7 +4,7 @@ import android.Manifest
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.generalhelper.RuntimePermissionHelper
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.RuntimePermissionHelper
 
 
 object ImagePickerHelper {

@@ -10,6 +10,7 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.Ite
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Detail
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.inferred.ItemWithDetail
 import kotlinx.coroutines.launch
 
 class AddEditViewModel(application: Application) : ViewModel() {
@@ -178,5 +179,3 @@ class AddEditViewModel(application: Application) : ViewModel() {
 //        }
 //    }
 }
-
-data class ItemWithDetail(val item: Item = Item(), var detail: Detail? = null)

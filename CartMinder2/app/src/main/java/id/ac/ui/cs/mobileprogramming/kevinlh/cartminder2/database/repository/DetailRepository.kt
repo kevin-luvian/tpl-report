@@ -16,7 +16,7 @@ class DetailRepository(application: Application) {
         detailDao = database.detailDao
     }
 
-    suspend fun findByItemId(id: Long): Detail = detailDao.findByItemId(id)
+    suspend fun findByItemId(id: Long): Detail? = detailDao.findByItemId(id)
 
     suspend fun insertDetail(detail: Detail) = detailDao.insert(detail)
 
@@ -26,4 +26,10 @@ class DetailRepository(application: Application) {
     fun deleteDetail(detail: Detail) =
         CoroutineScope(Dispatchers.IO).launch { detailDao.delete(detail) }
 
+    companion object {
+        @Volatile
+        private var instance: DetailRepository? = null
+        fun getInstance(application: Application): DetailRepository =
+            instance ?: DetailRepository(application).also { instance = it }
+    }
 }

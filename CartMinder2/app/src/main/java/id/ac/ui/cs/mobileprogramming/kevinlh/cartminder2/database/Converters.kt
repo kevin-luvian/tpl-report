@@ -1,13 +1,11 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database
 
-import android.net.Uri
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.enums.MarketCategory
 import java.lang.reflect.Type
 import java.util.*
-
 
 class Converters {
 
@@ -22,12 +20,6 @@ class Converters {
 
     @TypeConverter
     fun toMarketCategory(value: String): MarketCategory = MarketCategory.valueOf(value)
-
-    @TypeConverter
-    fun fromUri(uri: Uri?): String = uri.toString()
-
-    @TypeConverter
-    fun toUri(value: String): Uri? = Uri.parse(value)
 
     @TypeConverter
     fun fromMutableListOfString(value: MutableList<String>): String {

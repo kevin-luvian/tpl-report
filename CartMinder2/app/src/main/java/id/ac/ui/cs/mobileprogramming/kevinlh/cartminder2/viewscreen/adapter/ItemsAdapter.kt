@@ -1,4 +1,4 @@
-package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.adapter
+package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item
 
+class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
+    companion object {
+        @Volatile
+        private var instance: ItemsAdapter? = null
+        fun getInstance() = instance ?: ItemsAdapter().also { instance = it }
+    }
 
-class EditItemsAdapter : RecyclerView.Adapter<EditItemsAdapter.ViewHolder>() {
+    var listener: ClickListener? = null
     var items: List<Item> = listOf()
         set(value) {
             val diffCallback = DiffCallback(field, value)
@@ -27,10 +33,19 @@ class EditItemsAdapter : RecyclerView.Adapter<EditItemsAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.setItem(items[position])
+        listener?.let {
+            holder.itemView.setOnClickListener { _ ->
+                it.onItemClicked(items[position])
+            }
+        }
     }
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    interface ClickListener {
+        fun onItemClicked(item: Item)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -44,7 +59,7 @@ class EditItemsAdapter : RecyclerView.Adapter<EditItemsAdapter.ViewHolder>() {
         }
     }
 
-    open class DiffCallback(
+    private class DiffCallback(
         private val oldList: List<Item>,
         private val newList: List<Item>
     ) : DiffUtil.Callback() {

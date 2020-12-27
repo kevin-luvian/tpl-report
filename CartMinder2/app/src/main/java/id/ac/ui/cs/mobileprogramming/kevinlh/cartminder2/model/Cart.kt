@@ -1,10 +1,12 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model
 
+import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.enums.MarketCategory
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import java.util.*
 import java.util.Locale.ROOT
 
@@ -17,6 +19,33 @@ class Cart(title: String = "") : Parcelable {
     var category: MarketCategory = MarketCategory.UNSPECIFIED
     var active: Boolean = false
     var calendar: Calendar = Calendar.getInstance()
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Cart)
+            return title == other.title
+                    && category.name == other.category.name
+                    && calendar.timeInMillis == other.calendar.timeInMillis
+                    && active == other.active
+        throw RuntimeException("can't compare to non Cart object")
+    }
+
+    @SuppressLint("DefaultLocale")
+    override fun toString(): String {
+        val s = StringBuilder().apply {
+            append("Cart::\n")
+            append("  title     : $title\n")
+            append("  category  : ${category.name.toLowerCase().capitalize()}\n")
+            append("  active    : $active\n")
+            append(
+                "  calendar  : ${
+                    Utils.calendarToDateString(calendar)
+                } ${
+                    Utils.calendarToTimeString(calendar)
+                }\n"
+            )
+        }
+        return s.toString()
+    }
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()

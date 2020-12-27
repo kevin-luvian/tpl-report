@@ -12,10 +12,10 @@
         <action
             android:id="@+id/action_editCartList_to_addEditCart"
             app:destination="@id/addEditCart"
-            app:enterAnim="@anim/slide_in_right"
+            app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/idle"
             app:popEnterAnim="@anim/idle"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/addEditCart"
@@ -25,10 +25,10 @@
         <action
             android:id="@+id/action_addEditCart_to_addEditItem"
             app:destination="@id/addEditItem"
-            app:enterAnim="@anim/slide_in_right"
+            app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/idle"
             app:popEnterAnim="@anim/idle"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_left" />
         <argument
             android:name="cart"
             android:defaultValue="@null"
@@ -47,10 +47,10 @@
         <action
             android:id="@+id/action_addEditItem_to_addEditDetail"
             app:destination="@id/addEditDetail"
-            app:enterAnim="@anim/slide_in_right"
+            app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/idle"
             app:popEnterAnim="@anim/idle"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/addEditDetail"
@@ -72,7 +72,7 @@
         tools:layout="@layout/fragment_bottom_input_dialog">
         <argument
             android:name="IWDPos"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
     </dialog>
 </navigation>

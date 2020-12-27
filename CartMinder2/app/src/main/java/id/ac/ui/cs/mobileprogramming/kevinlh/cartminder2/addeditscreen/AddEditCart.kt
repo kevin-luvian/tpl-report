@@ -17,14 +17,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.adapter.EditItemsAdapter
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.helper.SwipeCallback
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.helper.SwipeHelper
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.viewmodel.AddEditViewModel
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.viewmodel.AddEditViewModelFactory
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.enums.MarketCategory
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.generalhelper.Utils
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.adapter.ItemsAdapter
 import java.util.*
 
 
@@ -38,7 +38,7 @@ class AddEditCart : Fragment(), View.OnClickListener {
     private lateinit var tvTime: TextView
     private lateinit var tvTotalPrice: TextView
     private lateinit var rvItems: RecyclerView
-    private lateinit var rvAdapter: EditItemsAdapter
+    private lateinit var rvAdapter: ItemsAdapter
 
     private fun setActivityTitle() {
         (activity as AppCompatActivity?)?.supportActionBar?.title = activityTitle
@@ -88,7 +88,7 @@ class AddEditCart : Fragment(), View.OnClickListener {
         spCategory = view.findViewById(R.id.edit_category)
         tvDate = view.findViewById(R.id.cart_date)
         tvTime = view.findViewById(R.id.cart_time)
-        tvTotalPrice = view.findViewById(R.id.total_price)
+        tvTotalPrice = view.findViewById(R.id.cart_total)
         setupRecyclerView()
         setupSpinner()
     }
@@ -201,7 +201,7 @@ class AddEditCart : Fragment(), View.OnClickListener {
     }
 
     private fun setupRecyclerView() {
-        rvAdapter = EditItemsAdapter()
+        rvAdapter = ItemsAdapter()
         val linearLayoutManager = getLayoutManager()
         rvItems.apply {
             layoutManager = linearLayoutManager
@@ -211,17 +211,13 @@ class AddEditCart : Fragment(), View.OnClickListener {
             .attachToRecyclerView(rvItems)
     }
 
-    private fun getLayoutManager(): RecyclerView.LayoutManager {
-        return object : LinearLayoutManager(context) {
-            override fun canScrollVertically(): Boolean {
-                return false
-            }
+    private fun getLayoutManager(): RecyclerView.LayoutManager =
+        object : LinearLayoutManager(requireContext()) {
+            override fun canScrollVertically(): Boolean = false
 
-            override fun setInitialPrefetchItemCount(itemCount: Int) {
+            override fun setInitialPrefetchItemCount(itemCount: Int) =
                 super.setInitialPrefetchItemCount(4)
-            }
         }
-    }
 
     private fun onClickCallback() = object : SwipeCallback {
         override fun onDeleteClicked(position: Int) {

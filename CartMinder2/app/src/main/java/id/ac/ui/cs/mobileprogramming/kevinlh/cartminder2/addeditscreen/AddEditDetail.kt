@@ -27,8 +27,8 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.adapter.E
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.helper.ImagePickerHelper
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.viewmodel.AddEditViewModel
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.viewmodel.AddEditViewModelFactory
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.generalhelper.FileHelper
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.generalhelper.Utils
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.FileHelper
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Detail
 import java.io.File
 

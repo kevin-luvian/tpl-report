@@ -36,9 +36,23 @@ class CartRepository(application: Application) {
 
     fun getLiveCarts(): LiveData<List<Cart>> = cartDao.getCarts().asLiveData()
 
-
     fun updateCart(cart: Cart) = CoroutineScope(Dispatchers.IO).launch { cartDao.update(cart) }
 
-
     fun deleteCart(cart: Cart) = CoroutineScope(Dispatchers.IO).launch { cartDao.delete(cart) }
+
+    fun deleteAll() {
+        CoroutineScope(Dispatchers.IO).launch {
+            cartDao.findAll().forEach {
+                deleteCart(it)
+            }
+        }
+    }
+
+    companion object {
+        private var instance: CartRepository? = null
+
+        fun getInstance(application: Application): CartRepository {
+            return instance ?: CartRepository(application)
+        }
+    }
 }

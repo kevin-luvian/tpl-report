@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cart: Cart): Long
 
     @Update
@@ -18,6 +18,9 @@ interface CartDao {
 
     @Query("SELECT * FROM cart_table WHERE id=:cartId")
     suspend fun findById(cartId: Long): Cart
+
+    @Query("SELECT * FROM cart_table")
+    fun findAll(): List<Cart>
 
     @Query("SELECT * FROM cart_table")
     fun getCarts(): Flow<List<Cart>>

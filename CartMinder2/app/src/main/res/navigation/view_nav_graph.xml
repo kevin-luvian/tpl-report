@@ -8,5 +8,41 @@
         android:id="@+id/viewCartList"
         android:name="id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.ViewCartList"
         android:label="fragment_view_cart_list"
-        tools:layout="@layout/fragment_view_cart_list" />
+        tools:layout="@layout/fragment_view_cart_list">
+        <action
+            android:id="@+id/action_viewCartList_to_viewCart"
+            app:destination="@id/viewCart"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/idle"
+            app:popEnterAnim="@anim/idle"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewCart"
+        android:name="id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.ViewCart"
+        android:label="fragment_view_cart"
+        tools:layout="@layout/fragment_view_cart">
+        <argument
+            android:name="cart"
+            app:argType="id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart" />
+        <action
+            android:id="@+id/action_viewCart_to_viewItemDetail"
+            app:destination="@id/viewItemDetail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/idle"
+            app:popEnterAnim="@anim/idle"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewItemDetail"
+        android:name="id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.ViewItemDetail"
+        android:label="fragment_view_item_detail"
+        tools:layout="@layout/fragment_view_item_detail">
+        <argument
+            android:name="item"
+            app:argType="id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item" />
+        <argument
+            android:name="detail"
+            app:argType="id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Detail" />
+    </fragment>
 </navigation>

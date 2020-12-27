@@ -1,4 +1,4 @@
-package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.adapter
+package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.adapter
 
 import android.app.Application
 import android.view.LayoutInflater
@@ -7,19 +7,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.CartRepository
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.generalhelper.Utils
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+class CartsAdapter(application: Application) :
+    RecyclerView.Adapter<CartsAdapter.ViewHolder>() {
+    companion object {
+        fun getInstance(application: Application): CartsAdapter {
+            return CartsAdapter(application)
+        }
+    }
 
-class EditCartsAdapter(application: Application) :
-    RecyclerView.Adapter<EditCartsAdapter.ViewHolder>() {
-    private val cartRepo = CartRepository(application)
+    private var cartRepo = CartRepository(application)
+    var listener: ClickListener? = null
     var carts: List<Cart> = listOf()
         set(value) {
             val diffCallback = DiffCallback(field, value)
@@ -27,6 +34,11 @@ class EditCartsAdapter(application: Application) :
             diffResult.dispatchUpdatesTo(this)
             field = value
         }
+
+    fun replaceCarts(newCarts: List<Cart>) {
+        carts = listOf()
+        carts = newCarts
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -38,11 +50,15 @@ class EditCartsAdapter(application: Application) :
         carts[position].let { c ->
             holder.setCart(c)
             CoroutineScope(Dispatchers.IO).launch {
+                holder.switch.setOnClickListener {
+                    cartRepo.updateCart(c.apply { active = !active })
+                }
                 val total = cartRepo.getTotalPrice(c)
                 withContext(Dispatchers.Main) {
                     holder.setCartTotal(total)
                 }
             }
+            listener?.let { holder.setListener(it, position) }
         }
     }
 
@@ -50,25 +66,48 @@ class EditCartsAdapter(application: Application) :
         return carts.size
     }
 
+    interface ClickListener {
+        fun onClick(position: Int)
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val tvCartTitle = view.findViewById<TextView>(R.id.cart_title)
         private val tvCartDate = view.findViewById<TextView>(R.id.cart_date)
         private val tvCartTime = view.findViewById<TextView>(R.id.cart_time)
         private val tvCartTotal = view.findViewById<TextView>(R.id.cart_total)
+        val switch: SwitchMaterial = view.findViewById<SwitchMaterial>(R.id.cart_switch)
+
+//        fun setListener(listener: ClickListener){
+//            itemView.setOnClickListener {
+//                val position = adapterPosition
+//                if (position != RecyclerView.NO_POSITION) {
+//                    listener.onClick(carts.get(position))
+//                }
+//            }
+//        }
 
         fun setCart(cart: Cart) {
-            tvCartTitle.text = cart.title
-            tvCartDate.text = Utils.calendarToDateString(cart.calendar)
-            tvCartTime.text = Utils.calendarToTimeString(cart.calendar)
+            cart.run {
+                tvCartTitle.text = title
+                tvCartDate.text = Utils.calendarToDateString(calendar)
+                tvCartTime.text = Utils.calendarToTimeString(calendar)
+                switch.isChecked = active
+            }
         }
 
         fun setCartTotal(total: Int) {
             val totalString = "${tvCartTotal.context.getString(R.string.currency)} $total"
             tvCartTotal.text = totalString
         }
+
+        fun setListener(listener: ClickListener, position: Int) {
+            itemView.setOnClickListener {
+                listener.onClick(position)
+            }
+        }
     }
 
-    open class DiffCallback(
+    private class DiffCallback(
         private val oldCarts: List<Cart>,
         private val newCarts: List<Cart>
     ) : DiffUtil.Callback() {

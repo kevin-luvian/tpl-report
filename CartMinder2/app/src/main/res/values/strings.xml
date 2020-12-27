@@ -13,7 +13,8 @@
     <string name="hint_item_title">Item Title</string>
     <string name="hint_price">price</string>
     <string name="total">Total</string>
-    <string name="btn_item_details">Item Details</string>
+    <string name="create_details">Create Details</string>
+    <string name="edit_details">Edit Details</string>
     <string name="button_choose_image">Choose Image</string>
     <string name="hint_description">Description</string>
     <string name="btn_add_tag">Add Tag</string>
@@ -25,4 +26,6 @@
     <string name="menu_other">Other</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="notification_title">[CartMinder] Reminder for</string>
+    <string name="networking">networking</string>
 </resources>

@@ -9,7 +9,6 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ItemRepository(application: Application) {
     private val itemDao: ItemDao
@@ -35,5 +34,13 @@ class ItemRepository(application: Application) {
 
     suspend fun findByCartId(id: Long): List<Item> {
         return itemDao.findByCartId(id)
+    }
+
+    companion object {
+        private var instance: ItemRepository? = null
+
+        fun getInstance(application: Application): ItemRepository {
+            return instance ?: ItemRepository(application)
+        }
     }
 }

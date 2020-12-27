@@ -2,6 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
+    <item android:title="Local Db">
+        <menu>
+            <item
+                android:id="@+id/menu_delete_local"
+                android:icon="@drawable/ic_delete_sweep"
+                android:title="Delete All Local Data" />
+        </menu>
+    </item>
+    <item android:title="Test Webservices">
+        <menu>
+            <item
+                android:id="@+id/menu_post_objs"
+                android:icon="@drawable/ic_cloud"
+                android:title="Post CartApis" />
+            <item
+                android:id="@+id/menu_delete_objs"
+                android:icon="@drawable/ic_cloud"
+                android:title="Delete CartApis" />
+            <item
+                android:id="@+id/menu_receive_objs"
+                android:icon="@drawable/ic_cloud"
+                android:title="Receive CartApis" />
+        </menu>
+    </item>
     <item android:title="@string/menu_other">
         <menu>
             <item

@@ -64,15 +64,24 @@ class AddEditItem : Fragment() {
         addEditViewModel.getIWD(iwdPos)?.apply {
             etTitle.addTextChangedListener(Watcher(0, item))
             etPrice.addTextChangedListener(Watcher(1, item))
-
-            etTitle.setText(item.title)
-            etPrice.setText(item.price.toString())
+            item.run {
+                etTitle.setText(title)
+                etPrice.setText(price.toString())
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         setActivityTitle()
+        checkBtnDetailText()
+    }
+
+    private fun checkBtnDetailText() {
+        addEditViewModel.getIWD(iwdPos)?.detail.let {
+            if (it == null) btnItemDetail.text = resources.getString(R.string.create_details)
+            else btnItemDetail.text = resources.getString(R.string.edit_details)
+        }
     }
 
     private fun createAcivityTitle(pos: Int) {

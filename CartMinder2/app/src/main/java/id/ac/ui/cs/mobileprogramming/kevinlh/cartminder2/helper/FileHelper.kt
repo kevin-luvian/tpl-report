@@ -1,4 +1,4 @@
-package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.generalhelper
+package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper
 
 import android.content.ContentUris
 import android.content.Context
