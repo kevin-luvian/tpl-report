@@ -4,12 +4,14 @@ import android.app.Application
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.CartRepository
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.enums.MarketCategory
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
 import kotlinx.coroutines.CoroutineScope
@@ -71,11 +73,13 @@ class CartsAdapter(application: Application) :
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val tvCartTitle = view.findViewById<TextView>(R.id.cart_title)
-        private val tvCartDate = view.findViewById<TextView>(R.id.cart_date)
-        private val tvCartTime = view.findViewById<TextView>(R.id.cart_time)
-        private val tvCartTotal = view.findViewById<TextView>(R.id.cart_total)
-        val switch: SwitchMaterial = view.findViewById<SwitchMaterial>(R.id.cart_switch)
+        private val vCartCategoryBg: View = view.findViewById(R.id.cart_category_bg)
+        private val ivCartCategory: ImageView = view.findViewById(R.id.cart_category_view)
+        private val tvCartTitle: TextView = view.findViewById(R.id.cart_title)
+        private val tvCartDate: TextView = view.findViewById(R.id.cart_date)
+        private val tvCartTime: TextView = view.findViewById(R.id.cart_time)
+        private val tvCartTotal: TextView = view.findViewById(R.id.cart_total)
+        val switch: SwitchMaterial = view.findViewById(R.id.cart_switch)
 
 //        fun setListener(listener: ClickListener){
 //            itemView.setOnClickListener {
@@ -88,6 +92,10 @@ class CartsAdapter(application: Application) :
 
         fun setCart(cart: Cart) {
             cart.run {
+                vCartCategoryBg.setBackgroundColor(
+                    MarketCategory.toColor(category, vCartCategoryBg.context)
+                )
+                ivCartCategory.setImageResource(MarketCategory.toImgResource(category))
                 tvCartTitle.text = title
                 tvCartDate.text = Utils.calendarToDateString(calendar)
                 tvCartTime.text = Utils.calendarToTimeString(calendar)
@@ -96,7 +104,12 @@ class CartsAdapter(application: Application) :
         }
 
         fun setCartTotal(total: Int) {
-            val totalString = "${tvCartTotal.context.getString(R.string.currency)} $total"
+
+            val totalString = "${
+                tvCartTotal.context.getString(R.string.currency)
+            } ${
+                Utils.numberToCurrencyFormat(total.toDouble())
+            }"
             tvCartTotal.text = totalString
         }
 

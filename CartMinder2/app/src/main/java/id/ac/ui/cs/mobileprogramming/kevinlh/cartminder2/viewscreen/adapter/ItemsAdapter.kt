@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item
 
 class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
@@ -53,7 +54,11 @@ class ItemsAdapter : RecyclerView.Adapter<ItemsAdapter.ViewHolder>() {
         private val tvPrice = view.findViewById<TextView>(R.id.price)
 
         fun setItem(item: Item) {
-            val price = "${tvPrice.context.getString(R.string.currency)} ${item.price}"
+            val price = "${
+                tvPrice.context.getString(R.string.currency)
+            } ${
+                Utils.numberToCurrencyFormat(item.price.toDouble())
+            }"
             tvTitle.text = item.title
             tvPrice.text = price
         }

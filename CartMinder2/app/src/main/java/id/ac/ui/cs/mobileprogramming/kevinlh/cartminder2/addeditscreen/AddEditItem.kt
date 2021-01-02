@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.viewmodel.AddEditViewModel
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen.viewmodel.AddEditViewModelFactory
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item
 
 class AddEditItem : Fragment() {
@@ -66,7 +67,7 @@ class AddEditItem : Fragment() {
             etPrice.addTextChangedListener(Watcher(1, item))
             item.run {
                 etTitle.setText(title)
-                etPrice.setText(price.toString())
+                etPrice.setText(Utils.numberToCurrencyFormat(price.toDouble()))
             }
         }
     }

@@ -2,6 +2,7 @@ package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.addeditscreen
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +28,6 @@ import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen.adapter.ItemsAdapter
 import java.util.*
-
 
 class AddEditCart : Fragment(), View.OnClickListener {
     private var activityTitle: String = "Add Cart"
@@ -101,7 +102,11 @@ class AddEditCart : Fragment(), View.OnClickListener {
             mList.forEach {
                 total += it.item.price
             }
-            val totalText = "${getString(R.string.currency)} $total"
+            val totalText = "${
+                getString(R.string.currency)
+            } ${
+                Utils.numberToCurrencyFormat(total.toDouble())
+            }"
             tvTotalPrice.text = totalText
         })
         addEditViewModel.cart?.let { cart ->
@@ -165,7 +170,7 @@ class AddEditCart : Fragment(), View.OnClickListener {
         when (v?.id) {
             R.id.btn_add -> navController.navigate(AddEditCartDirections.actionAddEditCartToAddEditItem())
             R.id.cart_date -> {
-                addEditViewModel.cart?.calendar!!.let { c ->
+                addEditViewModel.cart?.calendar?.let { c ->
                     DatePickerDialog(
                         requireContext(),
                         { _, year, monthOfYear, dayOfMonth ->
@@ -180,7 +185,7 @@ class AddEditCart : Fragment(), View.OnClickListener {
                 }
             }
             R.id.cart_time -> {
-                addEditViewModel.cart?.calendar!!.let { c ->
+                addEditViewModel.cart?.calendar?.let { c ->
                     TimePickerDialog(
                         requireContext(), { _, hourOfDay, minute ->
                             c.apply {
@@ -202,22 +207,31 @@ class AddEditCart : Fragment(), View.OnClickListener {
 
     private fun setupRecyclerView() {
         rvAdapter = ItemsAdapter()
-        val linearLayoutManager = getLayoutManager()
         rvItems.apply {
-            layoutManager = linearLayoutManager
+            layoutManager = createLayoutManager()
             adapter = rvAdapter
         }
         ItemTouchHelper(SwipeHelper(onClickCallback()))
             .attachToRecyclerView(rvItems)
     }
 
-    private fun getLayoutManager(): RecyclerView.LayoutManager =
-        object : LinearLayoutManager(requireContext()) {
-            override fun canScrollVertically(): Boolean = false
+    private fun createLayoutManager(): RecyclerView.LayoutManager =
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            gridLayoutManager()
+        else linearLayoutManager()
 
-            override fun setInitialPrefetchItemCount(itemCount: Int) =
-                super.setInitialPrefetchItemCount(4)
+    private fun gridLayoutManager() = object : GridLayoutManager(requireContext(), 2) {
+        override fun canScrollVertically(): Boolean = false
+        override fun setSpanSizeLookup(spanSizeLookup: SpanSizeLookup?) {
+            super.setSpanSizeLookup(object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int = if (position % 2 == 0) 0 else 1
+            })
         }
+    }
+
+    private fun linearLayoutManager() = object : LinearLayoutManager(requireContext()) {
+        override fun canScrollVertically() = false
+    }
 
     private fun onClickCallback() = object : SwipeCallback {
         override fun onDeleteClicked(position: Int) {
@@ -240,7 +254,7 @@ class AddEditCart : Fragment(), View.OnClickListener {
     }
 }
 
-class Watcher(val watchType: Int, val cart: Cart) : TextWatcher {
+class Watcher(private val watchType: Int, val cart: Cart) : TextWatcher {
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
     }
 

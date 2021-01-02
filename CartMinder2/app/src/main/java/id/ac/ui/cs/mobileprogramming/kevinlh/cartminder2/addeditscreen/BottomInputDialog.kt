@@ -43,6 +43,7 @@ class BottomInputDialog : BottomSheetDialogFragment(), TextWatcher {
 //        Log.d(TAG, "fragment is destroyed")
         addEditViewModel.getIWD(iwdPos)?.detail?.apply {
             tags.add(tagHolder)
+            addEditViewModel.setLiveTagHolder(tags)
         }
         super.onDestroy()
     }

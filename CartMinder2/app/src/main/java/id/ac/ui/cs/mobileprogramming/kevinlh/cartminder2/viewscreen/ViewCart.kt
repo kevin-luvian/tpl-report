@@ -1,9 +1,11 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -11,12 +13,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.CartRepository
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.DetailRepository
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.ItemRepository
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.enums.MarketCategory
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.Utils
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Item
@@ -25,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class ViewCart : Fragment() {
     private lateinit var navController: NavController
@@ -66,9 +71,15 @@ class ViewCart : Fragment() {
             view.findViewById<TextView>(R.id.cart_title).text = title
             view.findViewById<TextView>(R.id.cart_date).text = Utils.calendarToDateString(calendar)
             view.findViewById<TextView>(R.id.cart_time).text = Utils.calendarToTimeString(calendar)
+            view.findViewById<View>(R.id.cart_category_bg)
+                .setBackgroundColor(MarketCategory.toColor(category, requireContext()))
+            view.findViewById<ImageView>(R.id.cart_category_view)
+                .setImageResource(MarketCategory.toImgResource(category))
         }
         CoroutineScope(Dispatchers.Default).launch {
-            val totalText = "${getString(R.string.currency)} ${cartRepo.getTotalPrice(cart)}"
+            val totalPrice = cartRepo.getTotalPrice(cart)
+            val totalText =
+                "${getString(R.string.currency)} ${Utils.numberToCurrencyFormat(totalPrice.toDouble())}"
             withContext(Dispatchers.Main) {
                 view.findViewById<TextView>(R.id.cart_total).text = totalText
             }
@@ -82,9 +93,7 @@ class ViewCart : Fragment() {
             itemsAdapter.items = it
         })
         rvItems.apply {
-            layoutManager = object : LinearLayoutManager(requireContext()) {
-                override fun canScrollVertically() = false
-            }
+            layoutManager = createLayoutManager()
             adapter = itemsAdapter
         }
     }
@@ -95,23 +104,57 @@ class ViewCart : Fragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val detail = detailRepo.findByItemId(item.id)
                     withContext(Dispatchers.Main) {
-                        if (detail == null) {
+                        if (detail == null)
                             Toast.makeText(
                                 requireContext(),
-                                "no detail is added",
+                                getString(R.string.no_detail_message),
                                 Toast.LENGTH_SHORT
                             ).show()
-                        } else {
+                        else
                             navController.navigate(
-                                ViewCartDirections.actionViewCartToViewItemDetail(
-                                    item,
-                                    detail
-                                )
+                                ViewCartDirections
+                                    .actionViewCartToViewItemDetail(item, detail)
                             )
-                        }
                     }
                 }
             }
         }
     }
+
+    private fun createLayoutManager(): RecyclerView.LayoutManager =
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            gridLayoutManager()
+        else linearLayoutManager()
+
+    private fun gridLayoutManager() = object : GridLayoutManager(requireContext(), 2) {
+        override fun canScrollVertically(): Boolean = false
+        override fun setSpanSizeLookup(spanSizeLookup: SpanSizeLookup?) {
+            super.setSpanSizeLookup(object : SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int = if (position % 2 == 0) 0 else 1
+            })
+        }
+    }
+
+    private fun linearLayoutManager() = object : LinearLayoutManager(requireContext()) {
+        override fun canScrollVertically() = false
+    }
+
+//        new GridLayoutManager(HomeActivity.this, 2) {
+//            @Override
+//            public boolean canScrollVertically() {
+//                return false;
+//            }
+//
+//            @Override
+//            public void setSpanSizeLookup(GridLayoutManager.SpanSizeLookup spanSizeLookup) {
+//                super.setSpanSizeLookup(new SpanSizeLookup() {
+//                    @Override
+//                    public int getSpanSize(int position) {
+//                        if (position % 2 == 0) return 0;
+//                        return 1;
+//                    }
+//                });
+//            }
+//        };
+//    }
 }

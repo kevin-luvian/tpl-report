@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.widget.Toast
 
-
 class NetworkHelper(private var context: Context) {
     private var connectivityManager: ConnectivityManager =
         (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)

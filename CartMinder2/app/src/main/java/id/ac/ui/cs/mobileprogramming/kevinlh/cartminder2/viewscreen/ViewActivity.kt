@@ -1,5 +1,6 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.viewscreen
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -9,7 +10,9 @@ import com.google.android.material.navigation.NavigationView
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.R
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.ApiRepository
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.repository.CartRepository
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.glscreen.OpenGLActivity
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper.NetworkHelper
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.service.SyncService
 import kotlinx.android.synthetic.main.activity_view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +29,9 @@ class ViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
 
+        // Receiveing cloud objects
+        SyncService.scheduleJob(applicationContext)
+
         networkHelper = NetworkHelper.getInstance(applicationContext)
         apiRepo = ApiRepository(application)
         cartRepo = CartRepository(application)
@@ -39,9 +45,7 @@ class ViewActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        }
+        if (toggle.onOptionsItemSelected(item)) return true
         return super.onOptionsItemSelected(item)
     }
 
@@ -50,13 +54,18 @@ class ViewActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.menu_delete_local -> {
                     cartRepo.deleteAll()
-                    Toast.makeText(applicationContext, "local objects deleted", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.delete_local),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 R.id.menu_post_objs -> networkHelper.checkConnection {
                     apiRepo.postAllObjects {
                         Toast.makeText(
-                            applicationContext, "all objects posted", Toast.LENGTH_SHORT
+                            applicationContext,
+                            getString(R.string.api_post),
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                     // apiRepo.postTestCart()
@@ -64,14 +73,18 @@ class ViewActivity : AppCompatActivity() {
                 R.id.menu_delete_objs -> networkHelper.checkConnection {
                     apiRepo.deleteCloudObjects {
                         Toast.makeText(
-                            applicationContext, "all objects deleted", Toast.LENGTH_SHORT
+                            applicationContext,
+                            getString(R.string.api_delete),
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
                 R.id.menu_receive_objs -> networkHelper.checkConnection {
                     apiRepo.receiveCloudObjects {
                         Toast.makeText(
-                            applicationContext, "objects received", Toast.LENGTH_SHORT
+                            applicationContext,
+                            getString(R.string.api_get),
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                     // goToSandboxFragment()
@@ -79,12 +92,15 @@ class ViewActivity : AppCompatActivity() {
                 R.id.menu_sync -> networkHelper.checkConnection {
                     //                    apiRepo.syncObjects()
                     Toast.makeText(
-                        applicationContext, "sync menu clicked", Toast.LENGTH_SHORT
+                        applicationContext,
+                        getString(R.string.synchronize),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
-                R.id.menu_opengl ->
-                    Toast.makeText(applicationContext, "opengl menu clicked", Toast.LENGTH_SHORT)
-                        .show()
+                R.id.menu_opengl -> {
+                    val intent = Intent(applicationContext, OpenGLActivity::class.java)
+                    startActivity(intent)
+                }
             }
             true
         }

@@ -164,11 +164,8 @@ class AddEditViewModel(application: Application) : ViewModel() {
         liveTagsHolder.value = mList
     }
 
-    fun removeLiveTagHolder(pos: Int) {
-        liveTagsHolder.value?.apply {
-            removeAt(pos)
-            setLiveTagHolder(toMutableList())
-        }
+    fun clearLiveTagHolder() {
+        setLiveTagHolder(mutableListOf())
     }
 
 //    fun deleteFromLiveTagHolder(pos:Int){

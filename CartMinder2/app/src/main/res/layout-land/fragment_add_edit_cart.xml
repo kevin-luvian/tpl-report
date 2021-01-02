@@ -13,10 +13,11 @@
 
         <EditText
             android:id="@+id/edit_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/horizontal_screen_padding"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/horizontal_screen_padding"
+            android:layout_weight="1"
             android:backgroundTint="@color/dark_primary"
             android:hint="@string/hint_cart_title"
             android:inputType="text"
@@ -26,28 +27,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Spinner
-            android:id="@+id/edit_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/horizontal_screen_padding"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_title"
-            tools:background="@color/dark_text_color"
-            tools:layout_height="24dp" />
-
         <LinearLayout
             android:id="@+id/date_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/horizontal_screen_padding"
             android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edit_category">
+            app:layout_constraintTop_toBottomOf="@+id/edit_title">
 
             <ImageView
                 android:layout_width="32dp"
@@ -83,6 +73,15 @@
                 android:textColor="@color/dark_text_color"
                 android:textSize="18sp"
                 tools:ignore="SmallSp" />
+
+            <Spinner
+                android:id="@+id/edit_category"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/horizontal_screen_padding"
+                android:layout_weight="1"
+                tools:background="@color/dark_text_color"
+                tools:layout_height="24dp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

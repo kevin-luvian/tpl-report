@@ -8,4 +8,11 @@
     <color name="yellow">#FAD02C</color>
     <color name="light_primary">#F8EFE4</color>
     <color name="cream">#E6C2BF</color>
+    <color name="orange">#F2994A</color>
+    <color name="cyan">#0de5cf</color>
+    <color name="blue">#2D9CDB</color>
+    <color name="red">#E70342</color>
+    <color name="magenta">#A60744</color>
+    <color name="green">#27AE60</color>
+    <color name="light_green">#a8e50d</color>
 </resources>

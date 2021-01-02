@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="edit_menu">ubah</string>
+    <string name="hint_cart_title">Judul Keranjang</string>
+    <string name="save_menu">simpan</string>
+    <string name="hint_item_title">Judul Barang</string>
+    <string name="hint_price">harga</string>
+    <string name="total">Total</string>
+    <string name="create_details">Buat Detail</string>
+    <string name="edit_details">Ubah Detail</string>
+    <string name="button_choose_image">Pilih Gambar</string>
+    <string name="hint_description">Deskripsi</string>
+    <string name="btn_add_tag">Tambah Label</string>
+    <string name="label_take_camera">Ambil Kamera</string>
+    <string name="label_choose_gallery">Pilih Galeri</string>
+    <string name="hint_tag">label</string>
+    <string name="menu_sync">Sinkronisasi Objek</string>
+    <string name="menu_other">Lainnya</string>
+    <string name="open">Buka</string>
+    <string name="close">Tutup</string>
+    <string name="notification_title">[CartMinder] Pengingat untuk</string>
+    <string name="networking">jaringan</string>
+    <string name="no_detail_message">tidak ada detil yang dibuat</string>
+    <string name="delete_local">objek lokal dihapus</string>
+    <string name="synchronize">sinkronisasi...</string>
+    <string name="api_post">semua objek diunggah</string>
+    <string name="api_get">objek diterima</string>
+    <string name="api_delete">semua objek dihapus</string>
+    <string name="add_detail">Tambah Detail</string>
+    <string name="edit_detail">Ubah Detail</string>
+</resources>

@@ -4,14 +4,14 @@ import android.app.Application
 import android.util.Log
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.CartMinderDatabase
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.api.ApiClient
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.api.model.CartApiModel
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.api.model.CartApiModelPost
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.dao.CartDao
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.dao.DetailDao
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.dao.ItemDao
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.enums.MarketCategory
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Cart
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.Detail
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.inferred.CartApiModel
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.inferred.CartApiModelPost
 import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.inferred.ItemWithDetail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -137,6 +137,10 @@ class ApiRepository(application: Application) {
             }
         }
     }
+
+    suspend fun convertCartApiModelToPosts(mList: List<CartApiModel?>):
+            List<CartApiModelPost?> =
+        mList.map { m -> m?.let { CartApiModelPost(it.cart, it.iwdList) } }
 
     private suspend fun convertLocalObjectsToModelPosts(): List<CartApiModelPost> {
         val localObjects = mutableListOf<CartApiModelPost>()

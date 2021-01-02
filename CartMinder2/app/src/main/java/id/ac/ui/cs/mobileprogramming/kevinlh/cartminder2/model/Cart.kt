@@ -17,8 +17,10 @@ class Cart(title: String = "") : Parcelable {
     var id: Long = 0
     var title: String = title.capitalize(ROOT)
     var category: MarketCategory = MarketCategory.UNSPECIFIED
-    var active: Boolean = false
-    var calendar: Calendar = Calendar.getInstance()
+    var active: Boolean = true
+    var calendar: Calendar = Calendar.getInstance().apply {
+        add(Calendar.MINUTE, 1)
+    }
 
     override fun equals(other: Any?): Boolean {
         if (other is Cart)
@@ -30,22 +32,19 @@ class Cart(title: String = "") : Parcelable {
     }
 
     @SuppressLint("DefaultLocale")
-    override fun toString(): String {
-        val s = StringBuilder().apply {
-            append("Cart::\n")
-            append("  title     : $title\n")
-            append("  category  : ${category.name.toLowerCase().capitalize()}\n")
-            append("  active    : $active\n")
-            append(
-                "  calendar  : ${
-                    Utils.calendarToDateString(calendar)
-                } ${
-                    Utils.calendarToTimeString(calendar)
-                }\n"
-            )
-        }
-        return s.toString()
-    }
+    override fun toString(): String = StringBuilder().apply {
+        append("Cart::\n")
+        append("  title     : $title\n")
+        append("  category  : ${category.name.toLowerCase().capitalize()}\n")
+        append("  active    : $active\n")
+        append(
+            "  calendar  : ${
+                Utils.calendarToDateString(calendar)
+            } ${
+                Utils.calendarToTimeString(calendar)
+            }\n"
+        )
+    }.toString()
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()

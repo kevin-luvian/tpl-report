@@ -1,7 +1,7 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.api
 
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.inferred.CartApiModel
-import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.model.inferred.CartApiModelPost
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.api.model.CartApiModel
+import id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.database.api.model.CartApiModelPost
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

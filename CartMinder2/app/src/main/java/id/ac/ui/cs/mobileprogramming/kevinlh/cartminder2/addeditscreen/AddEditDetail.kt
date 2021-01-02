@@ -12,7 +12,6 @@ import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -39,7 +38,7 @@ class AddEditDetail : Fragment() {
         const val REQUEST_IMAGE_GALLERY_CODE = 2
     }
 
-    private var activityTitle: String = "Add Detail"
+    private var activityTitle: String = ""
     private var iwdPos: Int = -1
     private lateinit var navController: NavController
     private lateinit var addEditViewModel: AddEditViewModel
@@ -56,9 +55,10 @@ class AddEditDetail : Fragment() {
     }
 
     private fun createAcivityTitle() {
+        activityTitle = getString(R.string.add_detail)
         addEditViewModel.getIWD(iwdPos)?.detail.let {
             if (it == null) addEditViewModel.createNewDetail(iwdPos)
-            else activityTitle = "Edit Detail"
+            else activityTitle = getString(R.string.edit_detail)
         }
     }
 
@@ -79,7 +79,7 @@ class AddEditDetail : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Toast.makeText(requireContext(), "delete button clicked", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), "delete button clicked", Toast.LENGTH_SHORT).show()
         addEditViewModel.removeDetail(iwdPos)
         navController.popBackStack()
         return true
@@ -136,6 +136,11 @@ class AddEditDetail : Fragment() {
     override fun onResume() {
         super.onResume()
         setActivityTitle()
+    }
+
+    override fun onDestroy() {
+        addEditViewModel.clearLiveTagHolder()
+        super.onDestroy()
     }
 
     private fun imagePickerListener() = object : ImagePickerHelper.PickerOptionListener {
@@ -218,7 +223,7 @@ class AddEditDetail : Fragment() {
         override fun onDeleteClick(position: Int) {
             addEditViewModel.getIWD(iwdPos)?.detail?.run {
                 tags.removeAt(position)
-                addEditViewModel.setLiveTagHolder(tags.toMutableList())
+                addEditViewModel.setLiveTagHolder(tags)
             }
         }
     }

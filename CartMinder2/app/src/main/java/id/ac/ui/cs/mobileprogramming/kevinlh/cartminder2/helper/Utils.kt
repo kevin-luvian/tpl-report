@@ -1,8 +1,15 @@
 package id.ac.ui.cs.mobileprogramming.kevinlh.cartminder2.helper
 
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
 
 object Utils {
+    fun numberToCurrencyFormat(num: Double): String {
+        val formatter: NumberFormat = DecimalFormat("#,###")
+        return formatter.format(num)
+    }
+
     fun getRandomInt(min: Int, max: Int): Int = (min..max).random()
 
     fun getRandomString(length: Int): String {

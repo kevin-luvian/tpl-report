@@ -15,35 +15,32 @@
         <View
             android:id="@+id/cart_category_bg"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="50dp"
+            android:layout_height="200dp"
             android:background="@color/yellow"
-            app:layout_constraintBottom_toBottomOf="@+id/item_info_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/cart_category_view"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="24dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="70dp"
             android:src="@drawable/ic_stop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintBottom_toBottomOf="@+id/cart_category_bg"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cart_category_bg"
             app:tint="@color/light_primary" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/item_info_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="32dp"
             android:elevation="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cart_category_view">
+            app:layout_constraintBottom_toBottomOf="@+id/cart_category_view"
+            app:layout_constraintStart_toEndOf="@+id/cart_category_view"
+            app:layout_constraintTop_toTopOf="@+id/cart_category_view">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -119,12 +116,12 @@
             android:id="@+id/items_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:nestedScrollingEnabled="false"
             android:paddingHorizontal="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/item_info_layout"
+            app:layout_constraintTop_toBottomOf="@+id/cart_category_bg"
             tools:listitem="@layout/item_holder" />
 
         <androidx.cardview.widget.CardView
@@ -134,7 +131,7 @@
             android:layout_marginHorizontal="@dimen/horizontal_screen_padding"
             android:layout_marginTop="4dp"
             android:backgroundTint="@color/dark_primary"
-            android:elevation="4dp"
+            android:elevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/items_recycler_view">
